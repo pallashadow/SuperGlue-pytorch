@@ -1,0 +1,6 @@
+Namespace(batch_size=2, cache=False, epoch=20, eval=False, eval_output_dir='dump_match_pairs/', eval_pairs_list='assets/scannet_sample_pairs_with_gt.txt', fast_viz=False, feature_dim=256, keypoint_threshold=0.005, learning_rate=0.0001, match_threshold=0.2, max_keypoints=300, max_length=-1, nms_radius=4, opencv_display=False, resize=[320, 240], resize_float=False, show_keypoints=False, shuffle=False, sinkhorn_iterations=20, superglue='indoor', tensorboardLabel='cardTest1', train_path='/media/pallas/69c96109-1b7a-4adc-91e9-e72166a8d823/data/CHILD_BOOK/dataset/dataset/ref/card/', viz=False, viz_extension='png')
+Will write visualization images to directory "dump_match_pairs"
+Traceback (most recent call last):
+  File "train.py", line 166, in <module>
+    train_set = SparseDataset(opt.train_path, opt.max_keypoints, opt.feature_dim)
+TypeError: __init__() takes 3 positional arguments but 4 were given
