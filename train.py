@@ -136,6 +136,7 @@ def configParser():
 						default="", 
 						#default="./checkpoints/model_epoch_0.pth", 
 					   )
+	parser.add_argument('--debug', type=int, default=0)
 
 	parser.add_argument('--dataset_online', type=int, default=0)
 	parser.add_argument('--dataset_offline_rebuild', type=int, default=1)
@@ -188,12 +189,12 @@ if __name__ == '__main__':
 		'directory \"{}\"'.format(eval_output_dir))
 	
 	if opt.dataset_online:
-		dataBuilder = DataBuilder(config['superpoint'], './dataset/warped/', './dataset/sp/', numProcess=1)
+		dataBuilder = DataBuilder(config['superpoint'], './dataset/warped/', './dataset/sp/', numProcess=1, debug=opt.debug)
 		train_set = SparseDatasetOnline(opt.train_path, opt.hand_path, dataBuilder)
 	else:
 		if opt.dataset_offline_rebuild:
 			dataBuilder = DataBuilder(config['superpoint'], './dataset/warped/', './dataset/sp/', numProcess=7)
-			dataBuilder.buildAll(opt.train_path, opt.hand_path, batchSizeMax=64, saveFlag=1, debug=0)
+			dataBuilder.buildAll(opt.train_path, opt.hand_path, batchSizeMax=64, saveFlag=1, debug=opt.debug)
 		train_set = SparseDatasetOffline('./dataset/sp/')
 	train_loader = torch.utils.data.DataLoader(dataset=train_set, shuffle=False, batch_size=opt.batch_size, drop_last=True)
 

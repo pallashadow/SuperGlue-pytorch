@@ -1,0 +1,11 @@
+*.pyc
+*.DS_Store
+*.swp
+
+/checkpoints
+/logs
+/dump_match_pairs
+/__pycache_
+log.txt
+
+

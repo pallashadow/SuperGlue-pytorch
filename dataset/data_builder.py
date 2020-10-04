@@ -134,6 +134,7 @@ class DataBuilder(object):
 		
 	def extractSP(self, imageList):
 		N = len(imageList)
+		kpmax = self.max_keypoints
 		data = np.stack(imageList, axis=0)
 		data = torch.from_numpy(data[:, np.newaxis,:,:])
 		data = data.cuda()
@@ -141,10 +142,13 @@ class DataBuilder(object):
 			pred = self.superpoint({"image":data})
 		spPackList = []
 		for i in range(N):
-			kp1_np = pred['keypoints'][i].cpu().numpy()
-			descs1 = pred['descriptors'][i].cpu().numpy()
-			scores1_np = pred['scores'][i].cpu().numpy()
-			n1 = len(kp1_np)
+			kp1_np = np.zeros([self.max_keypoints, 2])
+			descs1 = np.zeros([self.feature_dim, self.max_keypoints])
+			scores1_np = np.zeros([self.max_keypoints])
+			n1 = len(pred['keypoints'][i])
+			kp1_np[:n1] = pred['keypoints'][i].cpu().numpy()
+			descs1[:,:n1] = pred['descriptors'][i].cpu().numpy()
+			scores1_np[:n1] = pred['scores'][i].cpu().numpy()
 			spPackList.append((n1, kp1_np, descs1, scores1_np))
 		return spPackList
 		

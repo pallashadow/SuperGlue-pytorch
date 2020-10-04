@@ -14,13 +14,13 @@ modified from: https://github.com/HeatherJiaZG/SuperGlue-pytorch
 
 6、enable offline data generation
 
-## offline building training-set (optional): 
+## offline building training-set (recommend): 
 
-python -m dataset.data_builder
+python -m dataset.data_builder --debug 1
 
 ## training: 
 
-python train.py --train_path {train_path} --superpoint_weight ./models/weight/superpoint_v1.pth --feature_dim 256 --dataset_offline_rebuild 0 --pretrained "" --batch_size 64
+python train.py --train_path {train_path} --superpoint_weight ./models/weights/superpoint_v1.pth --feature_dim 256 --dataset_offline_rebuild 1 --pretrained "" --batch_size 32 --debug 1
 
 --------------------------------------------------------------
 
@@ -35,21 +35,12 @@ python train.py --train_path {train_path} --superpoint_weight ./models/weight/su
 * Matplotlib >= 3.1
 * NumPy >= 1.18
 * tensorboardX >= 2.1
-* Cython >= 0.29
 
 ## Contents
 There are two main top-level scripts in this repo:
 
 1. `train.py` : trains the superglue model.
 2. `load_data.py`: reads images from files and creates pairs. It generates keypoints, descriptors and ground truth matches which will be used in training.
-
-### Training Directions
-
-To train the SuperGlue with default parameters, run the following command:
-
-```sh
-python train.py
-```
 
 ### Additional useful command line parameters
 * Use `--epoch` to set the number of epochs (default: `20`).
