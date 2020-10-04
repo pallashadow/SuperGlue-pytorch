@@ -1,3 +1,5 @@
+import sys
+sys.path.append("./")
 import numpy as np
 import torch
 import os
@@ -8,6 +10,8 @@ from models.superpoint import SuperPoint # official implement
 import dataset.render as render
 import pickle
 import multiprocessing
+
+import argparse
 
 def mat2map(M, W, H):
 	'''build reverse map from linear projection matrix'''
@@ -130,6 +134,10 @@ class DataBuilder(object):
 		self.nms_radius = config['nms_radius']
 		self.save_path_warped = save_path_warped
 		self.save_path_sp = save_path_sp
+		if not os.path.isdir(save_path_warped):
+			os.mkdir(save_path_warped)
+		if not os.path.isdir(save_path_sp):
+			os.mkdir(save_path_sp)
 		self.pool = multiprocessing.Pool(numProcess)
 		
 	def extractSP(self, imageList):
@@ -299,18 +307,36 @@ class DataBuilder(object):
 			i += batchSize
 			print("building training set {}/{}".format(i, N))
 	
+def configParser():
+	parser = argparse.ArgumentParser(
+		description='Image pair matching and pose evaluation with SuperGlue',
+		formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser.add_argument('--debug', type=int, default=1)
+	parser.add_argument(
+		'--max_keypoints', type=int, default=300,
+		help='Maximum number of keypoints detected by Superpoint'
+				' (\'-1\' keeps all keypoints)')
+	parser.add_argument(
+		'--feature_dim', type=int, default=256, help='superpoint feature dim')
+	parser.add_argument(
+		'--batch_size', type=int, default=32,
+		help='batch_size')
+	args = parser.parse_args()
+	if args.debug:
+		args.batch_size = 1
+	return args
+	
 if __name__ == "__main__":
-	import sys
-	sys.path.append("./")
+	args = configParser()
 	dataBuilder = DataBuilder({"weights_path": "./models/weights/superpoint_v1.pth", 
-							   "feature_dim": 128, 
-							  "max_keypoints": 300, 
+							   "feature_dim": args.feature_dim, 
+							  "max_keypoints": args.max_keypoints, 
 							  "keypoint_threshold": 0.01, 
 							  "nms_radius":4}, 
 							  './dataset/warped/', './dataset/sp/', numProcess=1)
-	train_path = "/media/pallas/69c96109-1b7a-4adc-91e9-e72166a8d823/data/CHILD_BOOK/dataset/dataset/ref/inner/"
+	train_path = "/media/pallas/69c96109-1b7a-4adc-91e9-e72166a8d823/data/CHILD_BOOK/dataset/dataset/ref/card/"
 	hand_path = ""
 	#hand_path = "/media/pallas/69c96109-1b7a-4adc-91e9-e72166a8d823/PROJECTS/SuperGlue-pytorch/turingAug/data/image_hand/"
 	#dataBuilder.buildAll(train_path, hand_path, batchSizeMax=64, saveFlag=1, debug=0)
-	dataBuilder.buildAll(train_path, hand_path, batchSizeMax=1, saveFlag=0, debug=1)
+	dataBuilder.buildAll(train_path, hand_path, batchSizeMax=args.batch_size, saveFlag=0, debug=args.debug)
 	

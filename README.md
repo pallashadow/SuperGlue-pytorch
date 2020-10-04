@@ -20,7 +20,7 @@ python -m dataset.data_builder --debug 1
 
 ## training: 
 
-python train.py --train_path {train_path} --superpoint_weight ./models/weights/superpoint_v1.pth --feature_dim 256 --dataset_offline_rebuild 1 --pretrained "" --batch_size 32 --debug 1
+python train.py --train_path {train_path} --superpoint_weight ./models/weights/superpoint_v1.pth --feature_dim 256 --dataset_offline_rebuild 1 --pretrained "" --batch_size 32 --debug 0
 
 --------------------------------------------------------------
 
