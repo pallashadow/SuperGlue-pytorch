@@ -1,6 +1,6 @@
 # SuperGlue-pytorch training
 
-modified from: https://github.com/HeatherJiaZG/SuperGlue-pytorch
+adapted from: https://github.com/HeatherJiaZG/SuperGlue-pytorch
 
 1、based on official superpoint implementation
 
